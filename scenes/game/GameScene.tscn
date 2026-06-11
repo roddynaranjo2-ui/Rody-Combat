@@ -1,0 +1,107 @@
+[gd_scene load_steps=9 format=3]
+
+[ext_resource type="PackedScene" path="res://scenes/character/PlayerCharacter.tscn" id="1_player"]
+[ext_resource type="PackedScene" path="res://scenes/ui/UI_Gameplay.tscn" id="2_ui"]
+[ext_resource type="Script" path="res://scripts/game/game_scene.gd" id="3_game_script"]
+
+[sub_resource type="Environment" id="Environment_ovomc"]
+background_mode = 1
+background_color = Color(0.18, 0.28, 0.45, 1)
+
+[sub_resource type="PlaneMesh" id="PlaneMesh_ground"]
+size = Vector2(24, 8)
+
+[sub_resource type="BoxShape3D" id="BoxShape3D_ground"]
+size = Vector3(24, 0.4, 8)
+
+[sub_resource type="BoxShape3D" id="BoxShape3D_platform"]
+size = Vector3(2, 0.3, 2)
+
+[sub_resource type="StyleBoxFlat" id="StyleBoxFlat_pause_panel"]
+bg_color = Color(0.05, 0.1, 0.18, 0.88)
+corner_radius_top_left = 16
+corner_radius_top_right = 16
+corner_radius_bottom_right = 16
+corner_radius_bottom_left = 16
+border_width_left = 2
+border_width_top = 2
+border_width_right = 2
+border_width_bottom = 2
+border_color = Color(1, 1, 1, 0.2)
+
+[node name="GameScene" type="Node3D"]
+script = ExtResource("3_game_script")
+
+[node name="WorldEnvironment" type="WorldEnvironment" parent="."]
+environment = SubResource("Environment_ovomc")
+
+[node name="SunLight" type="DirectionalLight3D" parent="."]
+transform = Transform3D(0.766044, -0.526541, 0.368688, 0, 0.573576, 0.819152, -0.642788, -0.627507, 0.439385, 0, 0, 0)
+
+[node name="CameraRig" type="Node3D" parent="."]
+
+[node name="Camera3D" type="Camera3D" parent="CameraRig"]
+transform = Transform3D(1, 0, 0, 0, 0.984808, 0.173648, 0, -0.173648, 0.984808, 0, 2.4, 6)
+current = true
+
+[node name="Ground" type="StaticBody3D" parent="."]
+
+[node name="GroundMesh" type="MeshInstance3D" parent="Ground"]
+mesh = SubResource("PlaneMesh_ground")
+
+[node name="GroundCollision" type="CollisionShape3D" parent="Ground"]
+transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, 0, -0.2, 0)
+shape = SubResource("BoxShape3D_ground")
+
+[node name="Platform" type="StaticBody3D" parent="."]
+transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, 0, 10, 0)
+
+[node name="PlatformCollision" type="CollisionShape3D" parent="Platform"]
+shape = SubResource("BoxShape3D_platform")
+
+[node name="PlayerCharacter" parent="." instance=ExtResource("1_player")]
+transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, 0, 0.5, 0)
+
+[node name="UI_Gameplay" parent="." instance=ExtResource("2_ui")]
+
+[node name="PauseOverlay" type="CanvasLayer" parent="."]
+layer = 20
+process_mode = 3
+
+[node name="Panel" type="Panel" parent="PauseOverlay"]
+anchors_preset = 8
+anchor_left = 0.5
+anchor_top = 0.5
+anchor_right = 0.5
+anchor_bottom = 0.5
+offset_left = -190.0
+offset_top = -140.0
+offset_right = 190.0
+offset_bottom = 140.0
+theme_override_styles/panel = SubResource("StyleBoxFlat_pause_panel")
+
+[node name="VBoxContainer" type="VBoxContainer" parent="PauseOverlay/Panel"]
+anchors_preset = 15
+anchor_right = 1.0
+anchor_bottom = 1.0
+offset_left = 24.0
+offset_top = 24.0
+offset_right = -24.0
+offset_bottom = -24.0
+theme_override_constants/separation = 16
+
+[node name="TitleLabel" type="Label" parent="PauseOverlay/Panel/VBoxContainer"]
+text = "JUEGO EN PAUSA"
+horizontal_alignment = 1
+
+[node name="ResumeButton" type="Button" parent="PauseOverlay/Panel/VBoxContainer"]
+custom_minimum_size = Vector2(0, 44)
+text = "Reanudar"
+
+[node name="RestartButton" type="Button" parent="PauseOverlay/Panel/VBoxContainer"]
+custom_minimum_size = Vector2(0, 44)
+text = "Reiniciar"
+
+[node name="MainMenuButton" type="Button" parent="PauseOverlay/Panel/VBoxContainer"]
+custom_minimum_size = Vector2(0, 44)
+text = "Menú principal"

@@ -1,0 +1,83 @@
+[gd_scene load_steps=8 format=3]
+
+[ext_resource type="Script" path="res://scripts/ui/gameplay_ui.gd" id="1_ui_script"]
+[ext_resource type="Script" path="res://scripts/ui/touch_button.gd" id="2_touch_script"]
+[ext_resource type="Texture2D" path="res://assets/ui/icons/arrow_white.png" id="3_arrow_tex"]
+[ext_resource type="Texture2D" path="res://assets/ui/icons/pause_icon.png" id="4_pause_tex"]
+
+[sub_resource type="RectangleShape2D" id="RectangleShape2D_arrow"]
+size = Vector2(96, 96)
+
+[node name="UI_Gameplay" type="CanvasLayer"]
+layer = 10
+process_mode = 3
+script = ExtResource("1_ui_script")
+
+[node name="TouchControls" type="Control" parent="."]
+anchors_preset = 3
+anchor_top = 1.0
+anchor_bottom = 1.0
+offset_left = 30.0
+offset_top = -260.0
+offset_right = 320.0
+offset_bottom = -30.0
+
+[node name="ArrowCluster" type="Control" parent="TouchControls"]
+custom_minimum_size = Vector2(288, 192)
+
+[node name="ArrowUp" type="TouchScreenButton" parent="TouchControls/ArrowCluster"]
+modulate = Color(1, 1, 1, 0.85)
+position = Vector2(96, 0)
+texture_normal = ExtResource("3_arrow_tex")
+texture_pressed = ExtResource("3_arrow_tex")
+shape = SubResource("RectangleShape2D_arrow")
+passby_press = true
+script = ExtResource("2_touch_script")
+direction = "jump"
+
+[node name="ArrowDown" type="TouchScreenButton" parent="TouchControls/ArrowCluster"]
+modulate = Color(1, 1, 1, 0.85)
+position = Vector2(96, 192)
+rotation = 3.141593
+texture_normal = ExtResource("3_arrow_tex")
+texture_pressed = ExtResource("3_arrow_tex")
+shape = SubResource("RectangleShape2D_arrow")
+passby_press = true
+script = ExtResource("2_touch_script")
+direction = "crouch"
+
+[node name="ArrowLeft" type="TouchScreenButton" parent="TouchControls/ArrowCluster"]
+modulate = Color(1, 1, 1, 0.85)
+position = Vector2(0, 96)
+rotation = -1.570796
+texture_normal = ExtResource("3_arrow_tex")
+texture_pressed = ExtResource("3_arrow_tex")
+shape = SubResource("RectangleShape2D_arrow")
+passby_press = true
+script = ExtResource("2_touch_script")
+direction = "left"
+
+[node name="ArrowRight" type="TouchScreenButton" parent="TouchControls/ArrowCluster"]
+modulate = Color(1, 1, 1, 0.85)
+position = Vector2(192, 96)
+rotation = 1.570796
+texture_normal = ExtResource("3_arrow_tex")
+texture_pressed = ExtResource("3_arrow_tex")
+shape = SubResource("RectangleShape2D_arrow")
+passby_press = true
+script = ExtResource("2_touch_script")
+direction = "right"
+
+[node name="PauseButton" type="TextureButton" parent="."]
+anchors_preset = 9
+anchor_left = 1.0
+anchor_right = 1.0
+offset_left = -120.0
+offset_top = 30.0
+offset_right = -30.0
+offset_bottom = 120.0
+custom_minimum_size = Vector2(90, 90)
+process_mode = 3
+texture_normal = ExtResource("4_pause_tex")
+stretch_mode = 5
+modulate = Color(1, 1, 1, 0.9)

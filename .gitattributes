@@ -1,0 +1,39 @@
+# === Git LFS — binarios pesados ===
+# Modelos 3D
+*.glb filter=lfs diff=lfs merge=lfs -text
+*.gltf filter=lfs diff=lfs merge=lfs -text
+*.fbx filter=lfs diff=lfs merge=lfs -text
+*.blend filter=lfs diff=lfs merge=lfs -text
+# Texturas (assets del JUEGO bajo res://assets/**)
+# Las imágenes de documentación (referencias_visuales/**, docs/**) NO van por LFS
+assets/**/*.png filter=lfs diff=lfs merge=lfs -text
+assets/**/*.jpg filter=lfs diff=lfs merge=lfs -text
+assets/**/*.jpeg filter=lfs diff=lfs merge=lfs -text
+*.tga filter=lfs diff=lfs merge=lfs -text
+*.exr filter=lfs diff=lfs merge=lfs -text
+*.hdr filter=lfs diff=lfs merge=lfs -text
+# Excluir explícitamente las imágenes de documentación del PROM de LFS
+referencias_visuales/** -filter -diff -merge text
+docs/**/*.png -filter -diff -merge -text
+docs/**/*.jpg -filter -diff -merge -text
+# Audio
+*.ogg filter=lfs diff=lfs merge=lfs -text
+*.wav filter=lfs diff=lfs merge=lfs -text
+*.mp3 filter=lfs diff=lfs merge=lfs -text
+# Fuentes
+*.ttf filter=lfs diff=lfs merge=lfs -text
+*.otf filter=lfs diff=lfs merge=lfs -text
+# Plantillas de export de Godot (si se versionan)
+*.tpz filter=lfs diff=lfs merge=lfs -text
+# === Normalización de fin de línea (texto) ===
+*.gd text eol=lf
+*.gdshader text eol=lf
+*.tres filter=lfs diff=lfs merge=lfs -text
+*.tscn text eol=lf
+*.cfg text eol=lf
+*.yml text eol=lf
+*.yaml text eol=lf
+*.md text eol=lf
+*.sh text eol=lf
+*.svg filter=lfs diff=lfs merge=lfs -text
+*.png filter=lfs diff=lfs merge=lfs -text

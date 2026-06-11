@@ -1,0 +1,27 @@
+name: GDScript Lint
+
+on:
+  pull_request:
+    branches: [ main ]
+  push:
+    branches: [ main ]
+
+jobs:
+  gdscript-lint:
+    runs-on: ubuntu-22.04
+    steps:
+      - uses: actions/checkout@v4
+        with:
+          lfs: false
+
+      - name: Setup Python
+        uses: actions/setup-python@v5
+        with:
+          python-version: '3.11'
+
+      - name: Install gdtoolkit
+        run: pip install "gdtoolkit==4.3.3"
+
+      - name: Run gdlint (no fail on warnings)
+        run: |
+          gdlint scripts/ || true
