@@ -41,9 +41,9 @@ jobs:
             exit 1
           fi
           mkdir -p $HOME/keystores
-          echo "$KEYSTORE_BASE64" | base64 --decode > $HOME/keystores/release.keystore
+          # Limpiamos el base64 de posibles espacios o saltos de linea accidentales antes de decodificar
+          echo "$KEYSTORE_BASE64" | tr -d '\r\n ' | base64 --decode > $HOME/keystores/release.keystore
           
-          # Configuracion de variables de entorno para Godot 4.3
           echo "GODOT_ANDROID_KEYSTORE_RELEASE_PATH=$HOME/keystores/release.keystore" >> $GITHUB_ENV
           echo "GODOT_ANDROID_KEYSTORE_RELEASE_USER=$KEY_ALIAS" >> $GITHUB_ENV
           echo "GODOT_ANDROID_KEYSTORE_RELEASE_PASSWORD=$KEYSTORE_PASSWORD" >> $GITHUB_ENV
@@ -63,7 +63,6 @@ jobs:
         run: |
           if [ -f export_presets.cfg ]; then
             sed -i "s/^version\/code=.*/version\/code=${{ github.run_number }}/" export_presets.cfg
-            grep "version/code" export_presets.cfg
           fi
 
       - name: Godot pre-import
