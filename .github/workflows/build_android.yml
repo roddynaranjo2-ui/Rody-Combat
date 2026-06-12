@@ -17,14 +17,12 @@ jobs:
     runs-on: ubuntu-22.04
 
     steps:
-      # 1) Checkout con LFS
       - name: Checkout repository
         uses: actions/checkout@v4
         with:
           lfs: true
           submodules: false
 
-      # 2) Godot editor + export templates (versión EXACTA)
       - name: Setup Godot
         uses: chickensoft-games/setup-godot@v2
         with:
@@ -32,26 +30,25 @@ jobs:
           use-dotnet: false
           include-templates: true
 
-      # 3) Decodificar keystore + mapear secrets canónicos
       - name: Decode release keystore and export signing env vars
         env:
           KEYSTORE_BASE64: ${{ secrets.RELEASE_KEYSTORE_BASE64 }}
           KEYSTORE_PASSWORD: ${{ secrets.KEYSTORE_PASSWORD }}
           KEY_ALIAS: ${{ secrets.KEY_ALIAS }}
-          KEY_PASSWORD: ${{ secrets.KEY_PASSWORD }}
         run: |
-          if [ -z "$KEYSTORE_BASE64" ] || [ -z "$KEYSTORE_PASSWORD" ] || [ -z "$KEY_ALIAS" ] || [ -z "$KEY_PASSWORD" ]; then
-            echo "::error::Faltan Secrets. Requeridos: RELEASE_KEYSTORE_BASE64, KEYSTORE_PASSWORD, KEY_ALIAS, KEY_PASSWORD"
+          if [ -z "$KEYSTORE_BASE64" ] || [ -z "$KEYSTORE_PASSWORD" ] || [ -z "$KEY_ALIAS" ]; then
+            echo "::error::Faltan Secrets. Requeridos: RELEASE_KEYSTORE_BASE64, KEYSTORE_PASSWORD, KEY_ALIAS"
             exit 1
           fi
           mkdir -p $HOME/keystores
           echo "$KEYSTORE_BASE64" | base64 --decode > $HOME/keystores/release.keystore
+          
+          # Configuracion de variables de entorno para Godot 4.3
           echo "GODOT_ANDROID_KEYSTORE_RELEASE_PATH=$HOME/keystores/release.keystore" >> $GITHUB_ENV
           echo "GODOT_ANDROID_KEYSTORE_RELEASE_USER=$KEY_ALIAS" >> $GITHUB_ENV
           echo "GODOT_ANDROID_KEYSTORE_RELEASE_PASSWORD=$KEYSTORE_PASSWORD" >> $GITHUB_ENV
-          echo "GODOT_ANDROID_KEYSTORE_RELEASE_KEY_PASSWORD=$KEY_PASSWORD" >> $GITHUB_ENV
+          echo "GODOT_ANDROID_KEYSTORE_RELEASE_KEY_PASSWORD=$KEYSTORE_PASSWORD" >> $GITHUB_ENV
 
-      # 4) Cache import/shader
       - name: Cache Godot shader cache
         uses: actions/cache@v4
         with:
@@ -62,30 +59,27 @@ jobs:
           restore-keys: |
             godot-cache-${{ runner.os }}-${{ env.GODOT_VERSION }}-
 
-      # 5) versionCode único por run
       - name: Bump Android versionCode
         run: |
-          sed -i "s/^version\/code=.*/version\/code=${{ github.run_number }}/" export_presets.cfg
-          grep "version/code" export_presets.cfg
+          if [ -f export_presets.cfg ]; then
+            sed -i "s/^version\/code=.*/version\/code=${{ github.run_number }}/" export_presets.cfg
+            grep "version/code" export_presets.cfg
+          fi
 
-      # 6) Pre-import (si falla, falla build)
       - name: Godot pre-import
         run: |
           godot --headless --import
 
-      # 7) Export APK
       - name: Export Android APK (release)
         run: |
           mkdir -p builds
           godot --headless --export-release "${{ env.EXPORT_PRESET }}" builds/${{ env.APK_NAME }}
 
-      # 8) Verificar APK
       - name: Verify APK exists
         run: |
           test -f builds/${{ env.APK_NAME }} || (echo "::error::APK no generado" && exit 1)
           ls -lh builds/
 
-      # 9) Subir artifact
       - name: Upload APK artifact
         uses: actions/upload-artifact@v4
         with:
