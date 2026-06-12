@@ -30,39 +30,16 @@ jobs:
           use-dotnet: false
           include-templates: true
 
-      - name: Decode release keystore and export signing env vars
+      - name: Decode release keystore
         env:
           KEYSTORE_BASE64: ${{ secrets.RELEASE_KEYSTORE_BASE64 }}
-          KEYSTORE_PASSWORD: ${{ secrets.KEYSTORE_PASSWORD }}
-          KEY_PASSWORD: ${{ secrets.KEY_PASSWORD }}
-          KEY_ALIAS: ${{ secrets.KEY_ALIAS }}
         run: |
-          if [ -z "$KEYSTORE_BASE64" ] || [ -z "$KEYSTORE_PASSWORD" ] || [ -z "$KEY_ALIAS" ]; then
-            echo "::error::Faltan Secrets. Requeridos: RELEASE_KEYSTORE_BASE64, KEYSTORE_PASSWORD, KEY_ALIAS"
+          if [ -z "$KEYSTORE_BASE64" ]; then
+            echo "::error::Falta el secreto RELEASE_KEYSTORE_BASE64"
             exit 1
           fi
-          
-          # Si KEY_PASSWORD no existe, usamos KEYSTORE_PASSWORD por defecto
-          ACTUAL_KEY_PASSWORD="${KEY_PASSWORD:-$KEYSTORE_PASSWORD}"
-          
-          mkdir -p $HOME/keystores
-          # Limpiamos el base64 de posibles espacios o saltos de linea accidentales antes de decodificar
-          echo "$KEYSTORE_BASE64" | tr -d '\r\n ' | base64 --decode > $HOME/keystores/release.keystore
-          
-          echo "GODOT_ANDROID_KEYSTORE_RELEASE_PATH=$HOME/keystores/release.keystore" >> $GITHUB_ENV
-          echo "GODOT_ANDROID_KEYSTORE_RELEASE_USER=$KEY_ALIAS" >> $GITHUB_ENV
-          echo "GODOT_ANDROID_KEYSTORE_RELEASE_PASSWORD=$KEYSTORE_PASSWORD" >> $GITHUB_ENV
-          echo "GODOT_ANDROID_KEYSTORE_RELEASE_KEY_PASSWORD=$ACTUAL_KEY_PASSWORD" >> $GITHUB_ENV
-
-      - name: Cache Godot shader cache
-        uses: actions/cache@v4
-        with:
-          path: |
-            .godot/imported
-            .godot/shader_cache
-          key: godot-cache-${{ runner.os }}-${{ env.GODOT_VERSION }}-${{ hashFiles('**/project.godot') }}
-          restore-keys: |
-            godot-cache-${{ runner.os }}-${{ env.GODOT_VERSION }}-
+          mkdir -p /home/runner/keystores
+          echo "$KEYSTORE_BASE64" | tr -d '\r\n ' | base64 --decode > /home/runner/keystores/release.keystore
 
       - name: Bump Android versionCode
         run: |
@@ -79,15 +56,9 @@ jobs:
           mkdir -p builds
           godot --headless --export-release "${{ env.EXPORT_PRESET }}" builds/${{ env.APK_NAME }}
 
-      - name: Verify APK exists
-        run: |
-          test -f builds/${{ env.APK_NAME }} || (echo "::error::APK no generado" && exit 1)
-          ls -lh builds/
-
       - name: Upload APK artifact
         uses: actions/upload-artifact@v4
         with:
           name: combate-movil-apk
           path: builds/${{ env.APK_NAME }}
           retention-days: 30
-          if-no-files-found: error
