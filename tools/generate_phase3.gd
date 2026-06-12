@@ -1,4 +1,3 @@
-# gdlint: disable=class-definitions-order,max-line-length
 extends SceneTree
 
 func _init() -> void:

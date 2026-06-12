@@ -1,8 +1,6 @@
 [gd_resource type="ShaderMaterial" load_steps=2 format=3]
+
 [ext_resource type="Shader" path="res://assets/environment/shaders/gradient_background.gdshader" id="1_shader"]
+
 [resource]
 shader = ExtResource("1_shader")
-shader_parameter/color_top = Color(0.101961, 0.227451, 0.419608, 1)
-shader_parameter/color_bottom = Color(0.0470588, 0.0941176, 0.176471, 1)
-shader_parameter/blur_amount = 0.02
-shader_parameter/wave_amount = 1.0

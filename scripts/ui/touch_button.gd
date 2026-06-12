@@ -1,4 +1,3 @@
-# gdlint: disable=class-definitions-order,max-line-length
 extends TouchScreenButton
 class_name DirectionalTouchButton
 

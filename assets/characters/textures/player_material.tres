@@ -1,3 +1,7 @@
-version https://git-lfs.github.com/spec/v1
-oid sha256:58b9f43f00893b06fe10a12fcb7db67091c9985503cf4c9e54320591cda38639
-size 142
+[gd_resource type="StandardMaterial3D" format=3]
+
+[resource]
+metallic_specular = 0.3
+roughness = 0.7
+normal_enabled = true
+normal_scale = 0.8
