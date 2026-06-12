@@ -45,6 +45,6 @@ func toggle_pause() -> void:
 
 # ============ CICLO DE VIDA ============
 func _ready() -> void:
-await get_tree().create_timer(0.1).timeout
+	await get_tree().create_timer(0.1).timeout
 	process_mode = Node.PROCESS_MODE_ALWAYS  # No se pausa nunca
 	print_debug("[GameManager] Inicializado")
