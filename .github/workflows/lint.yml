@@ -8,9 +8,11 @@ on:
 
 jobs:
   gdscript-lint:
+    name: GDScript Linter
     runs-on: ubuntu-22.04
     steps:
-      - uses: actions/checkout@v4
+      - name: Checkout repository
+        uses: actions/checkout@v4
         with:
           lfs: false
 
@@ -20,8 +22,10 @@ jobs:
           python-version: '3.11'
 
       - name: Install gdtoolkit
-        run: pip install "gdtoolkit==4.3.3"
+        run: pip install "gdtoolkit>=4.2.2"
 
-      - name: Run gdlint (no fail on warnings)
+      - name: Run gdlint
         run: |
-          gdlint scripts/ || true
+          # El comando busca todos los archivos .gd en el proyecto.
+          # Si no tienes una carpeta "scripts/", esto evitará que el workflow falle por "directorio no encontrado".
+          gdlint .
