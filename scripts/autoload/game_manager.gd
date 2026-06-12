@@ -29,7 +29,7 @@ func change_scene(scene_path: String) -> void:
 func _do_change_scene(scene_path: String) -> void:
 	var err: int = get_tree().change_scene_to_file(scene_path)
 	if err != OK:
-		print_debug("[GameManager] change_scene_to_file falló (err=%d) → %s" % [err, scene_path])
+		print("[GameManager] ERROR CRÍTICO: No se pudo cargar la escena %s. Error: %d" % [scene_path, err])
 		scene_change_failed.emit(scene_path, err)
 
 func request_pause(paused: bool) -> void:
@@ -45,5 +45,6 @@ func toggle_pause() -> void:
 
 # ============ CICLO DE VIDA ============
 func _ready() -> void:
+await get_tree().create_timer(0.1).timeout
 	process_mode = Node.PROCESS_MODE_ALWAYS  # No se pausa nunca
 	print_debug("[GameManager] Inicializado")
