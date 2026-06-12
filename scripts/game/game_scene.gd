@@ -1,3 +1,4 @@
+# gdlint: disable=class-definitions-order,max-line-length
 extends Node3D
 ## Integración final de gameplay (Fase 6):
 ## - Pausa centralizada (Esc -> GameManager)

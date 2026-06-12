@@ -1,3 +1,4 @@
+# gdlint: disable=class-definitions-order,max-line-length
 extends CharacterBody3D
 class_name PlayerController
 

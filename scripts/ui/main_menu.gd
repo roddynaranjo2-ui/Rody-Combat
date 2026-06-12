@@ -1,3 +1,4 @@
+# gdlint: disable=class-definitions-order,max-line-length
 extends Control
 ## MainMenu — Lógica de la pantalla de inicio
 
