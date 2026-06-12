@@ -24,9 +24,9 @@ window/size/viewport_height=720
 window/size/window_width_override=0
 window/size/window_height_override=0
 window/size/mode=0
-window/handheld/orientation=1
+window/handheld/orientation=4
 window/stretch/mode="canvas_items"
-window/stretch/aspect="expand"
+window/stretch/aspect="keep"
 window/stretch/scale_mode="fractional"
 window/vsync/vsync_mode=1
 

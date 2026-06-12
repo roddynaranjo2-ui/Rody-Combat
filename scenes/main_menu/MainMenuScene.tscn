@@ -75,7 +75,7 @@ grow_horizontal = 2
 grow_vertical = 2
 
 [node name="PlayButton" type="Button" parent="CenterContainer"]
-custom_minimum_size = Vector2(280, 90)
+custom_minimum_size = Vector2(320, 100)
 layout_mode = 2
 theme_override_styles/normal = SubResource("StyleBoxFlat_normal")
 theme_override_styles/hover = SubResource("StyleBoxFlat_hover")

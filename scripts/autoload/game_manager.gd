@@ -29,7 +29,7 @@ func change_scene(scene_path: String) -> void:
 func _do_change_scene(scene_path: String) -> void:
 	var err: int = get_tree().change_scene_to_file(scene_path)
 	if err != OK:
-		print("[GameManager] ERROR CRÍTICO: No se pudo cargar la escena %s. Error: %d" % [scene_path, err])
+		printerr("[GameManager] ERROR CRÍTICO: No se pudo cargar la escena %s. Error: %d" % [scene_path, err])
 		scene_change_failed.emit(scene_path, err)
 
 func request_pause(paused: bool) -> void:
